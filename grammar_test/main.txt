@@ -80,3 +80,32 @@ Explicit expressions
     (open_tag)
     (interpolated_expression (identifier))
     (close_tag)))
+
+======================================
+Transitions between code and markup
+=====================================
+
+<ul>
+  @while (a.b) {
+    <li>
+      @if (c.d) {
+        <span>big</span>
+      }
+    </li>
+  }
+</ul>
+
+---
+
+(document
+  (tag
+    (open_tag)
+    (interpolated_while_statement
+      (member_expression (identifier) (identifier))
+      (tag
+        (open_tag)
+        (interpolated_if_statement
+          (member_expression (identifier) (identifier))
+          (tag (open_tag) (close_tag)))
+        (close_tag)))
+    (close_tag)))
