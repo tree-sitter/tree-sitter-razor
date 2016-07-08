@@ -1,60 +1,82 @@
-=======================
-Basic tags
-=======================
-
-<p>Hello. Sup?</p>
-
----
-
-(document
-  (tag (open_tag) (close_tag)))
-
-=======================
+==========================
 Code blocks
-=======================
+==========================
 
 @{
-  Foo.Bar(123, 2);
-  Stuff();
+  int x = 123;
+  string y = "because.";
 }
 
 ---
 
-(document
-  (interpolated_code_block
-    (expression_statement
-      (call_expression
-        (member_expression (identifier) (identifier))
-        (number)
-        (number)))
-    (expression_statement
-      (call_expression (identifier)))))
+(document (interpolated_code_block
+  (variable_declaration (type_specifier (identifier)) (identifier) (number))
+  (variable_declaration (type_specifier (identifier)) (identifier) (string))))
 
-=======================
-Expressions
-=======================
+===========================
+Expressions (HTML-encoded)
+===========================
 
-@Something.Name
-Hello
-@Identifier
+<span>@model.Message</span>
 
 ---
 
 (document
-  (interpolated_expression (simple_member_expression (identifier) (identifier)))
-  (interpolated_expression (identifier)))
+  (tag
+    (open_tag)
+    (interpolated_expression (simple_member_expression (identifier) (identifier)))
+    (close_tag)))
 
 =======================
-Control statements
+Expressions (Unencoded)
+=======================
+
+<span>
+@Html.Raw(model.Message)
+</span>
+
+---
+
+(document
+  (tag
+    (open_tag)
+    (interpolated_expression (simple_call_expression
+      (simple_member_expression (identifier) (identifier))
+      (member_expression (identifier) (identifier))))
+    (close_tag)))
+
+=======================
+Mixing code and plain text
 =======================
 
 @if (x) {
-  <p>Hello</p>
+  var name = "Frank";
+  <text>Hello, @name</text>
 }
 
 ---
 
 (document
-  (interpolated_if_statement
-    (identifier)
-    (tag (open_tag) (close_tag))))
+  (interpolated_if_statement (identifier)
+    (variable_declaration
+      (type_specifier)
+      (identifier)
+      (string))
+    (tag
+      (open_tag)
+      (interpolated_expression (identifier))
+      (close_tag))))
+
+========================================
+Explicit expressions
+========================================
+
+<span>ISBN@(isbnNumber)</span>
+
+---
+
+(document
+  (tag
+    (open_tag)
+    (interpolated_expression (identifier))
+    (close_tag)))
