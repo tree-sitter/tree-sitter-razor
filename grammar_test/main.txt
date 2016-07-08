@@ -1,0 +1,60 @@
+=======================
+Basic tags
+=======================
+
+<p>Hello. Sup?</p>
+
+---
+
+(document
+  (tag (open_tag) (close_tag)))
+
+=======================
+Code blocks
+=======================
+
+@{
+  Foo.Bar(123, 2);
+  Stuff();
+}
+
+---
+
+(document
+  (interpolated_code_block
+    (expression_statement
+      (call_expression
+        (member_expression (identifier) (identifier))
+        (number)
+        (number)))
+    (expression_statement
+      (call_expression (identifier)))))
+
+=======================
+Expressions
+=======================
+
+@Something.Name
+Hello
+@Identifier
+
+---
+
+(document
+  (interpolated_expression (simple_member_expression (identifier) (identifier)))
+  (interpolated_expression (identifier)))
+
+=======================
+Control statements
+=======================
+
+@if (x) {
+  <p>Hello</p>
+}
+
+---
+
+(document
+  (interpolated_if_statement
+    (identifier)
+    (tag (open_tag) (close_tag))))
